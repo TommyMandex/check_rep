@@ -24,7 +24,6 @@ optional arguments:
   --vt                  check virustotal
   --fr                  use freegeoip for geolocation
   --mm                  use maxmind (geolite) for geolocation
-  --st                  use ipstack for geolocation--> see note below
   --mx FILE [FILE ...]  geolocate multiple ip addresses or domains
 
     Geolocation Options
