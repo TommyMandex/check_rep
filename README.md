@@ -30,7 +30,6 @@ optional arguments:
     --------------------
     freegeoip [freegeoip.live]  - free/opensource geolocation service                  
     maxmind   [dev.maxmind.com] - uses a geolite db file for geolocation         
-    ipstack   [ipstack.com]     - free, but requires registering for an api key  
     
     * NOTE: 
      Use of VirusTotal option requires an API key.  
