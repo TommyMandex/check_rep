@@ -11,7 +11,7 @@ Use of VirusTotal option requires an API key.  The service is free, however you 
 
 ```
 usage: check_rep.py [-h] [-q query] [--log] [--vt]
-                    [--fr | --mm | --st | --mx FILE [FILE ...]]
+                    [--fr | --mm | --mx FILE [FILE ...]]
 
 Check IP or Domain Reputation
 
