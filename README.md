@@ -1,7 +1,7 @@
 # Check Reputation
 ![Generic badge](https://img.shields.io/badge/python-3.7-blue.svg)
 
-`check_rep.py`: Check IP or Domain reputation against 400+ open-source Blacklists.  Utilizes asynchronous execution with [threads](https://docs.python.org/3/library/concurrent.futures.html) for faster querying.
+`check_rep.py` Check IP or Domain reputation against 400+ open-source Blacklists.  Utilizes asynchronous execution with [threads](https://docs.python.org/3/library/concurrent.futures.html) for faster querying.
 
 
 Option to create a Geolocation map file using coordinates derived from [freegeoip.live](https://freegeoip.live), or MaxMind [GeoLite](https://dev.maxmind.com).
