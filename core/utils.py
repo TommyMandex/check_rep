@@ -280,9 +280,9 @@ class Workers(object):
         for ip in self.chk_cflare_list(QRY):
             return ip
 
-    def tc_query(self, qry):
+    def tc_query(self, QRY):
         try:
-            cymru = f"{qry}.malware.hash.cymru.com"
+            cymru = f"{QRY}.malware.hash.cymru.com"
             resolver = dns.resolver.Resolver()
             resolver.timeout = 1
             resolver.lifetime = 1
