@@ -50,10 +50,6 @@ pip install -r requirements.txt
 ## Geolocation Map File
 ![alt text](images/geo_ip_map_example.png)
 -----------------
-#### Credits: 
-* ##### laconicwolf: https://github.com/laconicwolf
-* ##### abhinavbom:  https://github.com/abhinavbom/Threat-Intelligence-Hunter
-
 
 </br>
 
