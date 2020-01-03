@@ -139,14 +139,11 @@ class Workers(object):
             answer_txt = resolver.query(qry, 'TXT')
             logger.success(f"\u2714 {self.query} --> {blacklist} {answers[0]} {answer_txt[0]}")
             self.DNSBL_MATCHES += 1
-        except dns.resolver.NXDOMAIN:
-            pass  # skip non-results
-        except dns.resolver.Timeout:
-            logger.notice(f"[timeout] {blacklist}")
-        except dns.resolver.NoNameservers:
-            logger.warning(f"[no name servers] {blacklist}")
-        except dns.resolver.NoAnswer:
-            logger.error(f"[no answer] {blacklist}")
+        except (dns.resolver.NXDOMAIN, 
+                dns.resolver.Timeout,
+                dns.resolver.NoNameservers,
+                dns.resolver.NoAnswer):
+          pass
 
     def dnsbl_mapper(self):
         with ThreadPoolExecutor(max_workers=50) as executor:
@@ -191,8 +188,6 @@ class Workers(object):
             if match:
                 logger.success(f"\u2714 {self.query} --> {blacklist}")
                 self.BL_MATCHES += 1
-            else:
-                logger.notice(f"\u2718 {self.query} --> {blacklist}")
         except AddressValueError as err:
             logger.error(f"[error] {err}")
         except requests.exceptions.Timeout:
