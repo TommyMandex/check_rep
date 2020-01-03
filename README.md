@@ -45,7 +45,7 @@ pip install -r requirements.txt
 ```
 
 ## Example Run
-![alt_text](images/9NDEpnClkF.gif)
+[![asciicast](https://asciinema.org/a/r6VDD8QaHsaj3Fzo1wjU96BmQ.svg)](https://asciinema.org/a/r6VDD8QaHsaj3Fzo1wjU96BmQ)
 
 ## Geolocation Map File
 ![alt text](images/geo_ip_map_example.png)
