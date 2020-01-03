@@ -6,7 +6,7 @@ dnspython
 folium
 futures
 geoip2
-whois==0.9.5
+python-whois
 requests
 ruamel.yaml
 simplejson
