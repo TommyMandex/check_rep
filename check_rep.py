@@ -42,7 +42,7 @@ def main():
     banner = '''
    ________              __      ____
   / ____/ /_  ___  _____/ /__   / __ \___  ____
- / /   / __ \/ _ \/ ___/ //_/  / /_/ / _ \/ __ \\
+ / /   / __ \/ _ \/ ___/ //_/  / /_/ / _ \/ __ \ 
 / /___/ / / /  __/ /__/ ,<    / _, _/  __/ /_/ /
 \____/_/ /_/\___/\___/_/|_|  /_/ |_|\___/ .___/
                                        /_/
@@ -155,9 +155,9 @@ def main():
         # Check if cloudflare ip
         print(colored.stylize("\n--[ Using Cloudflare? ]--", colored.attr("bold")))
         if workers.cflare_results(QRY):
-            logger.success("\u2714 Cloudflare IP: Yes")
+            logger.info("Cloudflare IP: Yes")
         else:
-            logger.notice("\u2718 Cloudflare IP: No")
+            logger.info("Cloudflare IP: No")
         print(colored.stylize("\n--[ Querying DNSBL Lists ]--", colored.attr("bold")))
         workers.dnsbl_mapper()
         workers.spamhaus_ipbl_worker()
