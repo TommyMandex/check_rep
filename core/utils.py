@@ -234,14 +234,14 @@ class Workers(object):
                 logger.notice("\u2718 Cloudflare IP: No")
 
             w = whois.whois(QRY)
-            if w.registered:
-                print("Registered to:", w.registered)
+            if isinstance(w.registered, list):
+                print("Registered to:", ", ".join(str(x)for x in w.registered))
 
             print("Registrar:", w.registrar)
             print("Organization:", w.org)
 
-            if isinstance(w.updated_date, list):
-                print("Updated:", ", ".join(str(x)for x in w.updated_date))
+            if isinstance(w.last_updated, list):
+                print("Updated:", ", ".join(str(x)for x in w.last_updated))
             else:
                 print("Updated:", w.updated_date)
 
