@@ -236,12 +236,14 @@ class Workers(object):
             w = whois.whois(QRY)
             if isinstance(w.registered, list):
                 print("Registered to:", ", ".join(str(x)for x in w.registered))
+            else:
+                print("Registered to:", w.registered)
 
             print("Registrar:", w.registrar)
             print("Organization:", w.org)
 
-            if isinstance(w.last_updated, list):
-                print("Updated:", ", ".join(str(x)for x in w.last_updated))
+            if isinstance(w.updated_date, list):
+                print("Updated:", ", ".join(str(x)for x in w.updated_date))
             else:
                 print("Updated:", w.updated_date)
 
