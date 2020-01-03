@@ -178,7 +178,7 @@ def main():
     print(colored.stylize("\n--[ Results ]--", colored.attr("bold")))
     TOTALS = workers.DNSBL_MATCHES + workers.BL_MATCHES
     BL_TOTALS = workers.BL_MATCHES
-    if TOTALS is 0:
+    if TOTALS == 0:
         logger.info(f"[-] {QRY} is not listed in any Blacklists")
     else:
         color_QRY = Fore.YELLOW + QRY + Style.BRIGHT + Style.RESET_ALL
