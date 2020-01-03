@@ -140,10 +140,11 @@ class Workers(object):
             logger.success(f"\u2714 {self.query} --> {blacklist} {answers[0]} {answer_txt[0]}")
             self.DNSBL_MATCHES += 1
         except (dns.resolver.NXDOMAIN, 
-                dns.resolver.Timeout,
+                dns.resolver.Timeout,          
                 dns.resolver.NoNameservers,
                 dns.resolver.NoAnswer):
-          pass
+            pass
+
 
     def dnsbl_mapper(self):
         with ThreadPoolExecutor(max_workers=50) as executor:
@@ -229,14 +230,12 @@ class Workers(object):
 
             # Check if cloudflare ip
             if self.cflare_results(dns_resp[0]):
-                logger.success("\u2714 Cloudflare IP: Yes")
+                logger.info("Cloudflare IP: Yes")
             else:
-                logger.notice("\u2718 Cloudflare IP: No")
+                logger.info("Cloudflare IP: No")
 
             w = whois.whois(QRY)
-            if isinstance(w.registered, list):
-                print("Registered to:", ", ".join(str(x)for x in w.registered))
-            else:
+            if w.registered:
                 print("Registered to:", w.registered)
 
             print("Registrar:", w.registrar)
@@ -277,9 +276,9 @@ class Workers(object):
         for ip in self.chk_cflare_list(QRY):
             return ip
 
-    def tc_query(self, QRY):
+    def tc_query(self, qry):
         try:
-            cymru = f"{QRY}.malware.hash.cymru.com"
+            cymru = f"{qry}.malware.hash.cymru.com"
             resolver = dns.resolver.Resolver()
             resolver.timeout = 1
             resolver.lifetime = 1
