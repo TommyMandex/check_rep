@@ -182,7 +182,7 @@ def main():
         print(f"[>] {color_QRY} is listed in {color_DNSBL_MATCHES} DNSBL lists and {color_BL_TOTALS} Blacklists\n")
 
     # ---[ Geo Map output ]-------------------------------
-    if args.fg or args.mm:
+    if args.fg or args.mx:
         print(colored.stylize("\n--[ GeoIP Map File ]--", colored.attr("bold")))
         time_format = "%d %B %Y %H:%M:%S"
         try:
