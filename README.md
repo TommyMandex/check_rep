@@ -4,14 +4,21 @@
 `check_rep.py` Check IP or Domain reputation against 400+ open-source Blacklists.  Utilizes asynchronous execution with [threads](https://docs.python.org/3/library/concurrent.futures.html) for faster querying.
 
 
-Option to create a Geolocation map file using coordinates derived from [freegeoip.live](https://freegeoip.live), or MaxMind [GeoLite](https://dev.maxmind.com).
+Option to create a Geolocation map file using coordinates derived from [freegeoip.live](https://freegeoip.live).
 
 **Note:** 
 Use of VirusTotal option requires an API key.  The service is free, however you must register for an account to aquire an API key.
 
 ```
-usage: check_rep.py [-h] [-q query] [--log] [--vt]
-                    [--fr | --mm | --mx FILE [FILE ...]]
+   ________              __      ____
+  / ____/ /_  ___  _____/ /__   / __ \___  ____
+ / /   / __ \/ _ \/ ___/ //_/  / /_/ / _ \/ __ \
+/ /___/ / / /  __/ /__/ ,<    / _, _/  __/ /_/ /
+\____/_/ /_/\___/\___/_/|_|  /_/ |_|\___/ .___/
+                                       /_/
+
+Check IP and Domain Reputation
+usage: check_rep.py [-h] [-q query] [--log] [--vt] [--fg | --mx FILE [FILE ...]]
 
 Check IP or Domain Reputation
 
@@ -22,19 +29,18 @@ optional arguments:
   -h, --help            show this help message and exit
   --log                 log results to file
   --vt                  check virustotal
-  --fr                  use freegeoip for geolocation
-  --mm                  use maxmind (geolite) for geolocation
+  --fg                  use freegeoip for geolocation
   --mx FILE [FILE ...]  geolocate multiple ip addresses or domains
 
-    Geolocation Options
+    Options
     --------------------
-    freegeoip [freegeoip.live]  - free/opensource geolocation service                  
-    maxmind   [dev.maxmind.com] - uses a geolite db file for geolocation         
-    
-    * NOTE: 
-     Use of VirusTotal option requires an API key.  
-     The service is free, however you must register 
-     for an account to aquire an API key.
+    freegeoip [freegeoip.live]  - free/opensource geolocation service
+    virustotal [virustotal.com] - online multi-antivirus scan engine
+
+    * NOTE:
+    Use of the VirusTotal option requires an API key.
+    The service is "free" to use, however you must register
+    for an account to receive an API key.
 ``` 
 # Installation
 
