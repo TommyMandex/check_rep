@@ -132,13 +132,12 @@ class Workers(object):
             resolver.lifetime = 3
             qry = ''
             if helpers.regex(_type='ip_addr').findall(self.query):
-                qry = '.'.join(reversed(str(self.query).split("."))) + "." + blacklist
+                qry = '.'.join(reversed(str(self.query).split("."))) + "." + blacklist  # nopep8
             elif helpers.regex(_type='domain').findall(self.query):
                 qry = '.'.join(str(self.query).split(".")) + "." + blacklist
             answers = resolver.query(qry, "A")
             answer_txt = resolver.query(qry, 'TXT')
-            logger.success(
-                f"\u2714 {self.query} --> {blacklist} {answers[0]} {answer_txt[0]}")
+            logger.success(f"\u2714 {self.query} --> {blacklist} {answers[0]} {answer_txt[0]}")  # nopep8
             self.DNSBL_MATCHES += 1
         except (dns.resolver.NXDOMAIN,
                 dns.resolver.Timeout,
@@ -155,8 +154,7 @@ class Workers(object):
                     future.result()
                     dnsbl_map[future]
                 except Exception as exc:
-                    logger.error(
-                        f"{dnsbl_map[future]} generated an exception: {exc}")
+                    logger.error(f"{dnsbl_map[future]} generated an exception: {exc}")  # nopep8
 
     def spamhaus_ipbl_worker(self):
         try:
@@ -173,16 +171,15 @@ class Workers(object):
     # ---[ Query Blacklists ]-------------------------------
     def bl_mapper(self, query_type, list_type, list_name):
        with ThreadPoolExecutor(max_workers=50) as executor:
-           mapper = {executor.submit(query_type, url)
-                                     : url for url in list_type}
+           mapper = {executor.submit(query_type, url): url for url in list_type}  # nopep8
            for future in as_completed(mapper):
                try:
                    future.result()
                    mapper[future]
                except Exception as exc:
-                   logger.error(f"{mapper[future]} generated an exception: {exc}")
+                   logger.error(f"{mapper[future]} generated an exception: {exc}")  # nopep8
            if self.BL_MATCHES == 0:
-               logger.info(f"[-] {self.query} is not listed in active {list_name}")
+               logger.info(f"[-] {self.query} is not listed in active {list_name}")  # nopep8
 
     def blacklist_worker(self, blacklist):
         try:
@@ -265,8 +262,7 @@ class Workers(object):
                 print("Email Address:", w.emails)
 
         except Exception as exc:
-            print(
-                f"[-] Domain {QRY} does not appear to be registered domain.\n {exc}")
+            print(f"[-] Domain {QRY} does not appear to be registered domain.\n {exc}")  # nopep8
             time.sleep(1)  # prevents [WinError 10054]
 
     # ----[ CLOUDFLARE CHECK SECTION ]-------------------------------
