@@ -132,8 +132,7 @@ class Workers(object):
             resolver.lifetime = 3
             qry = ''
             if helpers.regex(_type='ip_addr').findall(self.query):
-                qry = '.'.join(
-                    reversed(str(self.query).split("."))) + "." + blacklist
+                qry = '.'.join(reversed(str(self.query).split("."))) + "." + blacklist
             elif helpers.regex(_type='domain').findall(self.query):
                 qry = '.'.join(str(self.query).split(".")) + "." + blacklist
             answers = resolver.query(qry, "A")
@@ -181,11 +180,9 @@ class Workers(object):
                    future.result()
                    mapper[future]
                except Exception as exc:
-                   logger.error(
-                       f"{mapper[future]} generated an exception: {exc}")
+                   logger.error(f"{mapper[future]} generated an exception: {exc}")
            if self.BL_MATCHES == 0:
-               logger.info(
-                   f"[-] {self.query} is not listed in active {list_name}")
+               logger.info(f"[-] {self.query} is not listed in active {list_name}")
 
     def blacklist_worker(self, blacklist):
         try:
