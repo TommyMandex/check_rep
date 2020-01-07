@@ -55,10 +55,10 @@ def main():
         description='Check IP or Domain Reputation',
         formatter_class=argparse.RawTextHelpFormatter,
         epilog='''
-    Geolocation Options
+    Options
     --------------------
-    freegeoip [freegeoip.live]  - free/opensource geolocation service                  
-    maxmind   [dev.maxmind.com] - uses a geolite db file for geolocation         
+    freegeoip [freegeoip.live]  - free/opensource geolocation service     
+    virustotal [virustotal.com] - online multi-antivirus scan engine            
     
     * NOTE: 
     Use of the VirusTotal option requires an API key.  
@@ -75,10 +75,8 @@ def main():
                           help='check virustotal')
 
     group = optional.add_mutually_exclusive_group()
-    group.add_argument('--fr', action='store_true',
+    group.add_argument('--fg', action='store_true',
                        help='use freegeoip for geolocation')
-    group.add_argument('--mm', action='store_true',
-                       help='use maxmind (geolite) for geolocation')
     group.add_argument('--mx', nargs='+', metavar='FILE',
                        help='geolocate multiple ip addresses or domains')
 
@@ -103,11 +101,8 @@ def main():
         file_log.setFormatter(logging.Formatter("[%(asctime)s %(levelname)s] %(message)s", datefmt="%m/%d/%Y %I:%M:%S"))
         logger.addHandler(file_log)
 
-    if args.fr:
+    if args.fg:
         map_free_geo(QRY)
-
-    if args.mm:
-        geo_query_map(QRY)
 
     if args.mx:
         print(colored.stylize("\n--[ Processing Geolocation Map ]--", colored.attr("bold")))
@@ -187,7 +182,7 @@ def main():
         print(f"[>] {color_QRY} is listed in {color_DNSBL_MATCHES} DNSBL lists and {color_BL_TOTALS} Blacklists\n")
 
     # ---[ Geo Map output ]-------------------------------
-    if args.fr or args.mm:
+    if args.fg or args.mm:
         print(colored.stylize("\n--[ GeoIP Map File ]--", colored.attr("bold")))
         time_format = "%d %B %Y %H:%M:%S"
         try:
