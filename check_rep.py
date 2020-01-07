@@ -98,28 +98,28 @@ def main():
             os.mkdir('logfile')
         dt_stamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
         file_log = logging.FileHandler(f"logfile/logfile_{dt_stamp}.txt")
-        file_log.setFormatter(logging.Formatter("[%(asctime)s %(levelname)s] %(message)s", datefmt="%m/%d/%Y %I:%M:%S"))
+        file_log.setFormatter(logging.Formatter("[%(asctime)s %(levelname)s] %(message)s", datefmt="%m/%d/%Y %I:%M:%S"))  # nopep8
         logger.addHandler(file_log)
 
     if args.fg:
         map_free_geo(QRY)
 
     if args.mx:
-        print(colored.stylize("\n--[ Processing Geolocation Map ]--", colored.attr("bold")))
+        print(colored.stylize("\n--[ Processing Geolocation Map ]--", colored.attr("bold")))  # nopep8
         multi_map(input_file=args.mx[0])
-        print(colored.stylize("\n--[ GeoIP Map File ]--", colored.attr("bold")))
+        print(colored.stylize("\n--[ GeoIP Map File ]--", colored.attr("bold")))  # nopep8
         try:
             multi_map_file = Path('multi_map.html').resolve(strict=True)
         except FileNotFoundError:
-            logger.info("[-] Geolocation map file was not created or does not exist.")
+            logger.info("[-] Geolocation map file was not created or does not exist.")  # nopep8
         else:
             logger.info(f"[>] Geolocation map file saved to: {multi_map_file}")
         sys.exit(1)
 
     if args.vt:
-        print(colored.stylize("\n--[ VirusTotal Detections ]--", colored.attr("bold")))
+        print(colored.stylize("\n--[ VirusTotal Detections ]--", colored.attr("bold")))  # nopep8
         if not config['VIRUS-TOTAL']['api_key']:
-            logger.warning("Please add VirusTotal API key to the 'settings.yml' file, or add it below")
+            logger.warning("Please add VirusTotal API key to the 'settings.yml' file, or add it below")  # nopep8
             user_vt_key = input("Enter key: ")
             config['VIRUS-TOTAL']['api_key'] = user_vt_key
             with open('settings.yml', 'w') as output:
@@ -135,36 +135,36 @@ def main():
             virustotal.vt_run('urls', QRY)
         else:
             virustotal.vt_run('files', QRY)
-            print(colored.stylize("\n--[ Team Cymru Detection ]--", colored.attr("bold")))
+            print(colored.stylize("\n--[ Team Cymru Detection ]--", colored.attr("bold")))  # nopep8
             workers.tc_query(qry=QRY)
             sys.exit("\n")
 
     if DOMAIN.findall(QRY) and not EMAIL.findall(QRY):
-        print(colored.stylize("\n--[ Querying Domain Blacklists ]--", colored.attr("bold")))
+        print(colored.stylize("\n--[ Querying Domain Blacklists ]--", colored.attr("bold")))  # nopep8
         workers.spamhaus_dbl_worker()
         workers.blacklist_dbl_worker()
-        print(colored.stylize(f"\n--[ WHOIS for {QRY} ]--", colored.attr("bold")))
+        print(colored.stylize(f"\n--[ WHOIS for {QRY} ]--", colored.attr("bold")))  # nopep8
         workers.whois_query(QRY)
 
     elif IP.findall(QRY):
         # Check if cloudflare ip
-        print(colored.stylize("\n--[ Using Cloudflare? ]--", colored.attr("bold")))
+        print(colored.stylize("\n--[ Using Cloudflare? ]--", colored.attr("bold")))  # nopep8
         if workers.cflare_results(QRY):
             logger.info("Cloudflare IP: Yes")
         else:
             logger.info("Cloudflare IP: No")
-        print(colored.stylize("\n--[ Querying DNSBL Lists ]--", colored.attr("bold")))
+        print(colored.stylize("\n--[ Querying DNSBL Lists ]--", colored.attr("bold")))  # nopep8
         workers.dnsbl_mapper()
         workers.spamhaus_ipbl_worker()
-        print(colored.stylize("\n--[ Querying IP Blacklists ]--", colored.attr("bold")))
+        print(colored.stylize("\n--[ Querying IP Blacklists ]--", colored.attr("bold")))  # nopep8
         workers.blacklist_ipbl_worker()
 
     elif NET.findall(QRY):
-        print(colored.stylize("\n--[ Querying NetBlock Blacklists ]--", colored.attr("bold")))
+        print(colored.stylize("\n--[ Querying NetBlock Blacklists ]--", colored.attr("bold")))  # nopep8
         workers.blacklist_netblock_worker()
 
     else:
-        print(Fore.YELLOW + "[!] Please enter a valid query -- Domain or IP address" + Style.RESET_ALL)
+        print(Fore.YELLOW + "[!] Please enter a valid query -- Domain or IP address" + Style.RESET_ALL)  # nopep8
         print("=" * 60, "\n")
         parser.print_help()
         parser.exit()
@@ -176,22 +176,22 @@ def main():
     if TOTALS == 0:
         logger.info(f"[-] {QRY} is not listed in any Blacklists")
     else:
-        color_QRY = Fore.YELLOW + QRY + Style.BRIGHT + Style.RESET_ALL
-        color_DNSBL_MATCHES = Fore.WHITE + Back.RED + str(workers.DNSBL_MATCHES) + Style.BRIGHT + Style.RESET_ALL
-        color_BL_TOTALS = Fore.WHITE + Back.RED + str(BL_TOTALS) + Style.BRIGHT + Style.RESET_ALL
-        print(f"[>] {color_QRY} is listed in {color_DNSBL_MATCHES} DNSBL lists and {color_BL_TOTALS} Blacklists\n")
+        _QRY = Fore.YELLOW + QRY + Style.BRIGHT + Style.RESET_ALL
+        _DNSBL_MATCHES = Fore.WHITE + Back.RED + str(workers.DNSBL_MATCHES) + Style.BRIGHT + Style.RESET_ALL  # nopep8
+        _BL_TOTALS = Fore.WHITE + Back.RED + str(BL_TOTALS) + Style.BRIGHT + Style.RESET_ALL  # nopep8
+        print(f"[>] {_QRY} is listed in {_DNSBL_MATCHES} DNSBL lists and {_BL_TOTALS} Blacklists\n")  # nopep8
 
     # ---[ Geo Map output ]-------------------------------
     if args.fg or args.mx:
-        print(colored.stylize("\n--[ GeoIP Map File ]--", colored.attr("bold")))
+        print(colored.stylize("\n--[ GeoIP Map File ]--", colored.attr("bold")))  # nopep8
         time_format = "%d %B %Y %H:%M:%S"
         try:
-            ip_map_file = prog_root.joinpath('geomap/ip_map.html').resolve(strict=True)
+            ip_map_file = prog_root.joinpath('geomap/ip_map.html').resolve(strict=True)  # nopep8
         except FileNotFoundError:
-            logger.warning("[-] Geolocation map file was not created/does not exist.\n")
+            logger.warning("[-] Geolocation map file was not created/does not exist.\n")  # nopep8
         else:
-            ip_map_timestamp = datetime.fromtimestamp(os.path.getctime(ip_map_file))
-            logger.info(f"[>] Geolocation map file created: {ip_map_file} [{ip_map_timestamp.strftime(time_format)}]\n")
+            ip_map_timestamp = datetime.fromtimestamp(os.path.getctime(ip_map_file))  # nopep8
+            logger.info(f"[>] Geolocation map file created: {ip_map_file} [{ip_map_timestamp.strftime(time_format)}]\n")  # nopep8
 
 
 if __name__ == "__main__":
