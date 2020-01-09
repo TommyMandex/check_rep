@@ -137,7 +137,7 @@ class Workers(object):
                 qry = '.'.join(str(self.query).split(".")) + "." + blacklist
             answers = resolver.query(qry, "A")
             answer_txt = resolver.query(qry, 'TXT')
-            logger.success(f"\u2714 {self.query} --> {blacklist} {answers[0]} {answer_txt[0]}")  # nopep8
+            logger.success(f"> {self.query} --> {blacklist} {answers[0]} {answer_txt[0]}")  # nopep8
             self.DNSBL_MATCHES += 1
         except (dns.resolver.NXDOMAIN,
                 dns.resolver.Timeout,
