@@ -67,22 +67,17 @@ def main():
 
     optional = parser._action_groups.pop()
     required = parser.add_argument_group('required arguments')
-    required.add_argument('-q', metavar='query',
-                          help='query ip address or domain')
-    optional.add_argument('--log', action='store_true',
-                          help='log results to file')
-    optional.add_argument('--vt', action='store_true',
-                          help='check virustotal')
+    required.add_argument('query', help='query ip address or domain')
+    optional.add_argument('--log', action='store_true', help='log results to file')
+    optional.add_argument('--vt', action='store_true', help='check virustotal')
 
     group = optional.add_mutually_exclusive_group()
-    group.add_argument('--fg', action='store_true',
-                       help='use freegeoip for geolocation')
-    group.add_argument('--mx', nargs='+', metavar='FILE',
-                       help='geolocate multiple ip addresses or domains')
+    group.add_argument('--fg', action='store_true', help='use freegeoip for geolocation')  # nopep8
+    group.add_argument('--mx', nargs='+', metavar='FILE', help='geolocate multiple ip addresses or domains')  # nopep8
 
     parser._action_groups.append(optional)
     args = parser.parse_args()
-    QRY = args.q
+    QRY = args.query
 
     if len(sys.argv[1:]) == 0:
         parser.print_help()
@@ -98,7 +93,8 @@ def main():
             os.mkdir('logfile')
         dt_stamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
         file_log = logging.FileHandler(f"logfile/logfile_{dt_stamp}.txt")
-        file_log.setFormatter(logging.Formatter("[%(asctime)s %(levelname)s] %(message)s", datefmt="%m/%d/%Y %I:%M:%S"))  # nopep8
+        file_log.setFormatter(logging.Formatter("[%(asctime)s %(levelname)s] %(message)s",
+                                                 datefmt="%m/%d/%Y %I:%M:%S"))  # nopep8
         logger.addHandler(file_log)
 
     if args.fg:
@@ -122,6 +118,7 @@ def main():
             logger.warning("Please add VirusTotal API key to the 'settings.yml' file, or add it below")  # nopep8
             user_vt_key = input("Enter key: ")
             config['VIRUS-TOTAL']['api_key'] = user_vt_key
+
             with open('settings.yml', 'w') as output:
                 yaml.dump(config, output)
 
@@ -153,6 +150,7 @@ def main():
             logger.info("Cloudflare IP: Yes")
         else:
             logger.info("Cloudflare IP: No")
+
         print(colored.stylize("\n--[ Querying DNSBL Lists ]--", colored.attr("bold")))  # nopep8
         workers.dnsbl_mapper()
         workers.spamhaus_ipbl_worker()
@@ -174,16 +172,16 @@ def main():
     TOTALS = workers.DNSBL_MATCHES + workers.BL_MATCHES
     BL_TOTALS = workers.BL_MATCHES
     if TOTALS == 0:
-        logger.info(f"[-] {QRY} is not listed in any Blacklists")
+        logger.info(f"[-] {QRY} is not listed in any Blacklists\n")
     else:
         _QRY = Fore.YELLOW + QRY + Style.BRIGHT + Style.RESET_ALL
         _DNSBL_MATCHES = Fore.WHITE + Back.RED + str(workers.DNSBL_MATCHES) + Style.BRIGHT + Style.RESET_ALL  # nopep8
         _BL_TOTALS = Fore.WHITE + Back.RED + str(BL_TOTALS) + Style.BRIGHT + Style.RESET_ALL  # nopep8
-        print(f"[>] {_QRY} is listed in {_DNSBL_MATCHES} DNSBL lists and {_BL_TOTALS} Blacklists\n")  # nopep8
+        logger.info(f"[>] {_QRY} is listed in {_DNSBL_MATCHES} DNSBL lists and {_BL_TOTALS} Blacklists\n")  # nopep8
 
     # ---[ Geo Map output ]-------------------------------
     if args.fg or args.mx:
-        print(colored.stylize("\n--[ GeoIP Map File ]--", colored.attr("bold")))  # nopep8
+        print(colored.stylize("--[ GeoIP Map File ]--", colored.attr("bold")))  # nopep8
         time_format = "%d %B %Y %H:%M:%S"
         try:
             ip_map_file = prog_root.joinpath('geomap/ip_map.html').resolve(strict=True)  # nopep8
