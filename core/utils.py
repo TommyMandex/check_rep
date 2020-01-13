@@ -124,10 +124,15 @@ class Workers(object):
         self.BL_MATCHES = 0
 
     # ---[ Query DNSBL Lists ]-------------------------------
+    # Ref: https://stackoverflow.com/questions/24093888/python-asynchronous-reverse-dns-lookups
     def dnsbl_query(self, blacklist):
         try:
             resolver = dns.resolver.Resolver()
-            # Ref: https://stackoverflow.com/questions/24093888/python-asynchronous-reverse-dns-lookups
+            # VeriSign and DNS.WATCH DNS servers (no logging)
+            resolver.nameservers = ['64.6.64.6',
+                                    '64.6.65.6',
+                                    '84.200.69.80',
+                                    '84.200.70.40']
             resolver.timeout = 3
             resolver.lifetime = 3
             qry = ''
