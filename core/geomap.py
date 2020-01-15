@@ -37,7 +37,10 @@ def geo_query_map(QRY):
 
     # Used to resolve domains to ip address
     resolver = dns.resolver.Resolver()
-    resolver.nameservers = ['1.1.1.1', '8.8.8.8', '8.8.4.4']
+    resolver.nameservers = ['64.6.64.6',
+                            '64.6.65.6',
+                            '84.200.69.80',
+                            '84.200.70.40']
     if DOMAIN.findall(QRY):
         try:
             response = resolver.query(QRY, 'A')
