@@ -34,7 +34,8 @@ prog_root = Path(__file__).resolve().parent
 
 # ---[ Configuration Parser ]-------------------------------
 yaml = YAML()
-with open('settings.yml') as _file:
+settings = prog_root.joinpath('settings.yml')
+with open(settings) as _file:
     config = yaml.load(_file)
 
 
