@@ -8,7 +8,7 @@ import sys
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from http.client import responses
-from ipaddress import AddressValueError, IPv4Address, IPv4Network
+from ipaddress import ip_address, AddressValueError, IPv4Address, IPv4Network
 
 import colored
 import coloredlogs
@@ -44,14 +44,7 @@ class Helpers(object):
             ip_net=r"(^(\d{1,3}\.){0,3}\d{1,3}/\d{1,2}$)",
             domain=r"([A-Za-z0-9]+(?:[\-|\.][A-Za-z0-9]+)*(?:\[\.\]|\.)(?:{}))".format(tlds),
             email=r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]{2,5}$)",
-            url=r"(http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)",
-            md5=r"(^[a-z0-9]{32}$)",
-            sha1=r"(^[a-z0-9]{40}$)",
-            sha224=r"(^[a-z0-9]{56}$))",
-            sha256=r"(^[a-z0-9]{64}$)",
-            sha512=r"(^[a-z0-9]{128}$)",
-            base64=r"(^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{4})$)"
-            # option: base64=r"(^[-A-Za-z0-9+/=]{3,}$)"
+            url=r"(http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+)"
         )
         try:
             pattern = re.compile(pattern[_type])
@@ -84,19 +77,23 @@ class Helpers(object):
     def download_file(url):
         local_file = url.split('/')[-1]
         try:
-            req = requests.get(url, local_file, stream=True)
-            chunk_size = 1024
-            size = int(req.headers['content-length'])
-            if req.status_code == 403:
+            resp = requests.get(url, local_file, stream=True)
+            size = int(resp.headers['content-length'])
+            pbar = tqdm(iterable=resp.iter_content(chunk_size=1024),
+                        total=size,
+                        unit="B",
+                        unit_scale=True,
+                        unit_divisor=1024)
+            if resp.status_code == 403:
                 logger.info(responses[403])
                 sys.exit()
-            elif req.status_code == 200:
+            elif resp.status_code == 200:
                 with open(local_file, 'wb') as f:
-                    for data in tqdm(iterable=req.iter_content(chunk_size=chunk_size),
-                                     ncols=100, total=size / chunk_size, unit='KB'):
+                    for data in pbar:
                         f.write(data)
+                        pbar.update(len(data))
             else:
-                logger.info((req.status_code, responses[req.status_code]))
+                logger.info((resp.status_code, responses[resp.status_code]))
                 sys.exit()
         except requests.exceptions.Timeout:
             logger.notice(f"[timeout] {url}")
@@ -124,26 +121,29 @@ class Workers(object):
         self.BL_MATCHES = 0
 
     # ---[ Query DNSBL Lists ]-------------------------------
-    # Ref: https://stackoverflow.com/questions/24093888/python-asynchronous-reverse-dns-lookups
     def dnsbl_query(self, blacklist):
+        host = str(''.join(self.query))
+        
+        # Return Codes
+        codes = ['127.0.0.2', '127.0.0.3', '127.0.0.4', '127.0.0.5',
+                 '127.0.0.6', '127.0.0.7', '127.0.0.9', '127.0.1.4',
+                 '127.0.1.5', '127.0.1.6', '127.0.0.10', '127.0.0.11',
+                 '127.0.0.39', '127.0.1.103', '127.0.1.104', '127.0.1.105',
+                 '127.0.1.106']
+        
         try:
             resolver = dns.resolver.Resolver()
-            # VeriSign and DNS.WATCH DNS servers (no logging)
-            resolver.nameservers = ['64.6.64.6',
-                                    '64.6.65.6',
-                                    '84.200.69.80',
-                                    '84.200.70.40']
             resolver.timeout = 3
             resolver.lifetime = 3
             qry = ''
             if helpers.regex(_type='ip_addr').findall(self.query):
-                qry = '.'.join(reversed(str(self.query).split("."))) + "." + blacklist  # nopep8
+                qry = ip_address(host).reverse_pointer.strip('.in-addr.arpa') + "." + blacklist  # nopep8
             elif helpers.regex(_type='domain').findall(self.query):
-                qry = '.'.join(str(self.query).split(".")) + "." + blacklist
-            answers = resolver.query(qry, "A")
-            answer_txt = resolver.query(qry, 'TXT')
-            logger.success(f"> {self.query} --> {blacklist} {answers[0]} {answer_txt[0]}")  # nopep8
-            self.DNSBL_MATCHES += 1
+                qry = '.'.join(str(host).split(".")) + "." + blacklist
+            answer = resolver.query(qry, "A")
+            if any(str(answer[0]) in s for s in codes):
+                logger.success(f"\u2716  {self.query} --> {blacklist}")  # nopep8
+                self.DNSBL_MATCHES += 1
         except (dns.resolver.NXDOMAIN,
                 dns.resolver.Timeout,
                 dns.resolver.NoNameservers,
@@ -192,7 +192,7 @@ class Workers(object):
             req.encoding = 'utf-8'
             match = re.findall(self.query, req.text)
             if match:
-                logger.success(f"\u2714 {self.query} --> {blacklist}")
+                logger.success(f"\u2716  {self.query} --> {blacklist}")
                 self.BL_MATCHES += 1
         except AddressValueError as err:
             logger.error(f"[error] {err}")
